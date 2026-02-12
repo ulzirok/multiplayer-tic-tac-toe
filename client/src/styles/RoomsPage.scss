@@ -1,0 +1,144 @@
+.rooms-container {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    min-height: 100vh;
+    background: #2f2f4a;
+    padding: 40px;
+    flex-wrap: wrap;
+}
+
+.rooms-card {
+    background: #2f2f4a;
+    padding: 40px;
+    border-radius: 16px;
+    width: 50%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    h2 {
+        margin-bottom: 25px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .create-btn {
+        width: 40%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: #6c63ff;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-bottom: 20px;
+
+        &:hover {
+            background: #574bff;
+            transform: translateY(-2px);
+        }
+    }
+
+    .list-header {
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #fff;
+    }
+
+    .rooms-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .empty {
+            color: #aaa;
+        }
+
+        .room-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #3a3a60;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #fff;
+
+            button {
+                padding: 6px 12px;
+                border-radius: 8px;
+                border: none;
+                background: #6c63ff;
+                color: white;
+                font-weight: 600;
+                cursor: pointer;
+                transition: 0.2s;
+
+                &:hover:enabled {
+                    background: #574bff;
+                    transform: translateY(-1px);
+                }
+
+                &:disabled {
+                    background: #999;
+                    cursor: not-allowed;
+                    transform: none;
+                }
+            }
+        }
+    }
+}
+
+.users-stats {
+    background: #2f2f4a;
+    padding: 40px;
+    border-radius: 16px;
+    width: 35%;
+    min-width: 320px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    color: #fff;
+
+    h3 {
+        margin-bottom: 20px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        background: #3a3a60;
+
+        th {
+            padding: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+    }
+
+    tbody {
+        tr {
+            background: #3a3a60;
+            border-radius: 8px;
+
+            &:not(:last-child) {
+                margin-bottom: 10px;
+            }
+
+            td {
+                padding: 10px;
+                text-align: center;
+            }
+        }
+    }
+
+    tbody tr:hover {
+        background: #45457a;
+        transition: 0.2s;
+    }
+}

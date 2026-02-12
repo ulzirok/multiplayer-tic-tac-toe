@@ -1,0 +1,40 @@
+.lobby {
+    background: #2f2f4a;
+    padding: 40px;
+    border-radius: 16px;
+    width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    ul {
+        list-style: none;
+        margin-bottom: 20px;
+
+        li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: #00c896;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+
+        &:hover {
+            background: #00a97e;
+            transform: translateY(-2px);
+        }
+    }
+}
