@@ -46,7 +46,7 @@ const updateStats = async (name, result) => {
     const stats = result === USER_STATS.WIN ? 'wins' : (result === USER_STATS.LOSS ? 'losses' : 'draws');
 
     const query = `
-        INSERT INTO users (username, ${stats}) 
+        INSERT INTO tictactoe_users (username, ${stats})
         VALUES ($1, 1) 
         ON CONFLICT (username) 
         DO UPDATE SET ${stats} = tictactoe_users.${stats} + 1;
