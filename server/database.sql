@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE tictactoe_users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     wins INTEGER DEFAULT 0,

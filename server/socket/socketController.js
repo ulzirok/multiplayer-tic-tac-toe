@@ -49,7 +49,7 @@ const updateStats = async (name, result) => {
         INSERT INTO users (username, ${stats}) 
         VALUES ($1, 1) 
         ON CONFLICT (username) 
-        DO UPDATE SET ${stats} = users.${stats} + 1;
+        DO UPDATE SET ${stats} = tictactoe_users.${stats} + 1;
     `;
 
     try {

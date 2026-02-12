@@ -6,7 +6,7 @@ module.exports.createSession = async function (req, res) {
     try {
         const { username } = req.body;
         await pool.query(
-            'INSERT INTO users (username) VALUES ($1) ON CONFLICT (username) DO NOTHING',
+            'INSERT INTO tictactoe_users (username) VALUES ($1) ON CONFLICT (username) DO NOTHING',
             [username]
         );
         const roomId = randomUUID();
