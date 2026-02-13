@@ -31,6 +31,16 @@ CREATE TABLE tictactoe_users (
 ## Backend cold start
 Бэкенд данного проекта задеплоен на бесплатном тарифе и может находиться в спящем режиме. При первом обращении к серверу после простоя запуск может занять до 30–60 секунд. Если приложение не отвечает сразу — пожалуйста, подождите немного и обновите страницу.
 
+## Screenshots
+![Login Page](./screenshots/login.jpg)
+
+![Room Page](./screenshots/room.jpg)
+
+![Start](./screenshots/start.jpg)
+
+![Board](./screenshots/board.jpg)
+
+![Result](./screenshots/result.jpg)
 
 
 
