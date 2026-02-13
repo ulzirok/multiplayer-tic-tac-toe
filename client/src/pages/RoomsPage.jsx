@@ -46,9 +46,7 @@ export default function RoomsPage() {
       const data = await createSession(userName);
       navigate(`/lobby/${data.roomId}`);
     } catch (err) {
-      toast.error(
-        err.message || "The server is unavailable. Please try again later.",
-      );
+      toast.error(err.message || "Error creating room");
     }
   };
 

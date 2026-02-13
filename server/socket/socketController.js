@@ -7,6 +7,7 @@ const sessions = require('../state/state');
 const handleJoin = (ws, data, aWss) => {
     const { roomId, userName } = data;
     ws.roomId = roomId;
+    
     if (!sessions[roomId]) {
         sessions[roomId] = {
             players: [],
@@ -33,9 +34,7 @@ const handleJoin = (ws, data, aWss) => {
 const handleStart = (data, aWss) => {
     const { roomId } = data;
     const session = sessions[roomId];
-
     if (!session || session.players.length !== 2) return;
-
     if (session.started && !session.isFinished) return;
 
     session.game = new Game();
@@ -54,8 +53,6 @@ const handleStart = (data, aWss) => {
             currentTurn: session.game.currentTurn
         }));
     });
-
-    console.log(`Game started in room: ${roomId}`);
 };
 
 const updateStats = async (name, result) => {
@@ -77,10 +74,8 @@ const updateStats = async (name, result) => {
 
 const validateMove = (session, ws, symbol) => {
     if (!session || !session.started) return false;
-
     const player = session.players.find(p => p.socket === ws);
     if (!player) return false;
-
     if (player.symbol !== symbol) return false;
 
     return player;
@@ -102,7 +97,6 @@ const broadcastGameUpdate = (aWss, roomId, game) => {
 
 const handleGameResult = async (session, roomId) => {
     const game = session.game;
-
     if (game.statsUpdated) return;
 
     if (game.winner) {
@@ -111,6 +105,7 @@ const handleGameResult = async (session, roomId) => {
 
         if (winner) await updateStats(winner.name, USER_STATS.WIN);
         if (loser) await updateStats(loser.name, USER_STATS.LOSS);
+        
         session.started = false;
         session.isFinished = true;
         game.statsUpdated = true;
@@ -170,27 +165,19 @@ const handleClose = (ws, aWss) => {
     if (!roomId) return;
 
     const session = sessions[roomId];
-    if (session) {
+    if (!session) return;
+
+    session.players = session.players.filter(p => p.socket !== ws);
+
+    if (session.players.length > 0) {
         broadcast(aWss, roomId, {
             method: METHODS.OPPONENT_LEFT,
-            message: "Your opponent has left."
         });
-
-        session.players = session.players.filter(p => p.socket !== ws);
-
-        if (session.players.length === 0) {
-            delete sessions[roomId];
-        } else {
-            session.isFinished = true;
-            session.started = false;
-
-            setTimeout(() => {
-                if (sessions[roomId]) delete sessions[roomId];
-            }, 5000);
-        }
+        session.started = false;
+    } else {
+        delete sessions[roomId];
     }
 };
-
 
 module.exports = {
     handleJoin,

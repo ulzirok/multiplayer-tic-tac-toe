@@ -17,31 +17,25 @@ export default function LobbyPage() {
 
     const handleMessage = (e) => {
       const data = JSON.parse(e.data);
-
       switch (data.method) {
         case METHODS.ERROR:
           toast.error(data.message);
-          if (data.message === "Room is unavailable") {
-            navigate("/rooms");
-          }
+          if (data.message === "Room is unavailable") navigate("/rooms");
           break;
-
         case METHODS.UPDATE_PLAYERS:
           setPlayers(data.players || []);
           setIsCreator(data.players?.[0] === localStorage.getItem("userName"));
           break;
-
         case METHODS.START_GAME:
           localStorage.setItem("symbol", data.symbol);
           navigate(`/game/${roomId}`);
           break;
-
         default:
           break;
       }
     };
 
-    socket.onopen = () => {
+    const sendJoinMessage = () => {
       socket.send(
         JSON.stringify({
           method: METHODS.JOIN_ROOM,
@@ -51,10 +45,17 @@ export default function LobbyPage() {
       );
     };
 
+    if (socket.readyState === WebSocket.OPEN) {
+      sendJoinMessage();
+    } else {
+      socket.onopen = sendJoinMessage;
+    }
+
     socket.onmessage = handleMessage;
 
     return () => {
       socket.onmessage = null;
+      socket.onopen = null;
     };
   }, [roomId, navigate]);
 

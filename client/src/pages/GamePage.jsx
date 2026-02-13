@@ -79,9 +79,7 @@ export default function GamePage() {
   
   const handleExit = () => {
     const socket = getSocket();
-    if (socket) {
-      socket.close();
-    }
+    if (socket) socket.close();
     navigate("/rooms");
   };
   
