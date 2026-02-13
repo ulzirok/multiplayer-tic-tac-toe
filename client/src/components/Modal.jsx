@@ -1,6 +1,6 @@
 import "../styles/Modal.scss";
 
-export default function Modal({ winner, isDraw, onRestart, onExit }) {
+export default function Modal({ winner, isDraw, isOpponentGone, onRestart, onExit }) {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -9,9 +9,11 @@ export default function Modal({ winner, isDraw, onRestart, onExit }) {
           {isDraw ? "Draw!" : `Winner: ${winner}`}
         </div>
         <div className="modal-buttons">
-          <button className="btn-restart" onClick={onRestart}>
-            Play again
-          </button>
+          {!isOpponentGone && (
+            <button className="btn-restart" onClick={onRestart}>
+              Play again
+            </button>
+          )}
           <button className="btn-exit" onClick={onExit}>
             Come back to statistics page
           </button>

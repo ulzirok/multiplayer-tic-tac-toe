@@ -1,4 +1,3 @@
-
 export const METHODS = {
     JOIN_ROOM: 'JOIN_ROOM',
     START_GAME: 'START_GAME',
@@ -8,4 +7,9 @@ export const METHODS = {
     RESTART_GAME: 'RESTART_GAME',
     OPPONENT_LEFT: 'OPPONENT_LEFT',
     ERROR: 'ERROR'
+};
+
+export const GAME_STATUS = {
+    PLAYING: 'PLAYING',
+    FINISHED: 'FINISHED'
 };

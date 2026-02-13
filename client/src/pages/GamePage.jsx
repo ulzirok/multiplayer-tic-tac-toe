@@ -11,7 +11,6 @@ import { toast } from "react-toastify";
 export default function GamePage() {
   const navigate = useNavigate();
   const { roomId } = useParams();
-
   const [mySymbol, setMySymbol] = useState(
     () => localStorage.getItem("symbol") || "",
   );
@@ -19,6 +18,7 @@ export default function GamePage() {
   const [turn, setTurn] = useState("X");
   const [winner, setWinner] = useState(null);
   const [isDraw, setIsDraw] = useState(false);
+  const [isOpponentGone, setIsOpponentGone] = useState(false);
 
   useEffect(() => {
     const socket = getSocket();
@@ -33,10 +33,8 @@ export default function GamePage() {
           break;
 
         case METHODS.OPPONENT_LEFT:
-          toast.info(
-            "Your opponent has left. You will be redirected to the Statistics page.",
-          );
-          navigate("/rooms");
+          setIsOpponentGone(true);
+          toast.info("Opponent left");
           break;
 
         case METHODS.START_GAME:
@@ -79,6 +77,14 @@ export default function GamePage() {
     setIsDraw(false);
   };
   
+  const handleExit = () => {
+    const socket = getSocket();
+    if (socket) {
+      socket.close();
+    }
+    navigate("/rooms");
+  };
+  
   return (
     <div className="game-page">
       <div className="top">
@@ -89,9 +95,7 @@ export default function GamePage() {
           Turn: <span>{turn}</span>
         </h3>
       </div>
-
       {winner && <div className="winner">Winner: {winner}</div>}
-
       <div className="status">
         {winner
           ? "Finished"
@@ -99,17 +103,15 @@ export default function GamePage() {
             ? "Your turn!"
             : "Opponent's turn..."}
       </div>
-
       <Board board={board} roomId={roomId} mySymbol={mySymbol} turn={turn} />
-
-      <button onClick={handleRestart}>Restart</button>
-
+      {!isOpponentGone && <button onClick={handleRestart}>Restart</button>}
       {(winner || isDraw) && (
         <Modal
           winner={winner}
           isDraw={isDraw}
+          isOpponentGone={isOpponentGone}
           onRestart={handleRestart}
-          onExit={() => navigate("/rooms")}
+          onExit={handleExit}
         />
       )}
     </div>

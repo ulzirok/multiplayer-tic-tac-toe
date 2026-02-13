@@ -1,6 +1,5 @@
 const { METHODS } = require('../constants');
 const { handleJoin, handleStart, handleMove, handleRestart } = require('./socketController');
-const sessions = require('../state/state');
 
 module.exports = function (ws, msg, aWss) {
     const data = JSON.parse(msg);
@@ -8,19 +7,19 @@ module.exports = function (ws, msg, aWss) {
 
     switch (method) {
         case METHODS.JOIN_ROOM:
-            handleJoin(ws, data, aWss, sessions);
+            handleJoin(ws, data, aWss);
             break;
 
         case METHODS.START_GAME:
-            handleStart(data, aWss, sessions);
+            handleStart(data, aWss);
             break;
 
         case METHODS.MAKE_MOVE:
-            handleMove(ws, data, aWss, sessions);
+            handleMove(ws, data, aWss);
             break;
 
         case METHODS.RESTART_GAME:
-            handleRestart(data, aWss, sessions);
+            handleRestart(data, aWss);
             break;
     }
 };

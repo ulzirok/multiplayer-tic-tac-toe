@@ -4,13 +4,25 @@ const broadcast = require('../utils/broadcast');
 const { METHODS, PLAYER_SYMBOLS, USER_STATS } = require('../constants');
 const sessions = require('../state/state');
 
-const handleJoin = (ws, data, aWss, sessions) => {
+const handleJoin = (ws, data, aWss) => {
     const { roomId, userName } = data;
     ws.roomId = roomId;
+    if (!sessions[roomId]) {
+        sessions[roomId] = {
+            players: [],
+            started: false,
+            game: null
+        };
+    }
+
     const session = sessions[roomId];
-    if (!session) return ws.send(JSON.stringify({ method: METHODS.ERROR, message: "Room not found" }));
-    if (session.players.length >= 2) return ws.send(JSON.stringify({ method: METHODS.ERROR, message: "Room is unavailable" }));
-    if (!session.players.find(p => p.name === userName)) session.players.push({ name: userName, socket: ws });
+    if (session.players.length >= 2 && !session.players.find(p => p.name === userName)) {
+        return ws.send(JSON.stringify({ method: METHODS.ERROR, message: "Room is unavailable" }));
+    }
+
+    if (!session.players.find(p => p.name === userName)) {
+        session.players.push({ name: userName, socket: ws });
+    }
 
     broadcast(aWss, roomId, {
         method: METHODS.UPDATE_PLAYERS,
@@ -18,16 +30,18 @@ const handleJoin = (ws, data, aWss, sessions) => {
     });
 };
 
-const handleStart = (data, aWss, sessions) => {
+const handleStart = (data, aWss) => {
     const { roomId } = data;
     const session = sessions[roomId];
 
-    if (!session) return;
-    if (session.players.length !== 2) return;
-    if (session.started) return;
+    if (!session || session.players.length !== 2) return;
 
-    session.started = true;
+    if (session.started && !session.isFinished) return;
+
     session.game = new Game();
+    session.started = true;
+    session.isFinished = false;
+    session.game.statsUpdated = false;
 
     session.players[0].symbol = PLAYER_SYMBOLS.X;
     session.players[1].symbol = PLAYER_SYMBOLS.O;
@@ -40,6 +54,8 @@ const handleStart = (data, aWss, sessions) => {
             currentTurn: session.game.currentTurn
         }));
     });
+
+    console.log(`Game started in room: ${roomId}`);
 };
 
 const updateStats = async (name, result) => {
@@ -84,7 +100,7 @@ const broadcastGameUpdate = (aWss, roomId, game) => {
     });
 };
 
-const handleGameResult = async (session) => {
+const handleGameResult = async (session, roomId) => {
     const game = session.game;
 
     if (game.statsUpdated) return;
@@ -95,9 +111,9 @@ const handleGameResult = async (session) => {
 
         if (winner) await updateStats(winner.name, USER_STATS.WIN);
         if (loser) await updateStats(loser.name, USER_STATS.LOSS);
-
+        session.started = false;
+        session.isFinished = true;
         game.statsUpdated = true;
-        return;
     }
 
     if (game.isDraw) {
@@ -106,18 +122,18 @@ const handleGameResult = async (session) => {
                 updateStats(p.name, USER_STATS.DRAW)
             )
         );
-
+        session.started = false;
+        session.isFinished = true;
         game.statsUpdated = true;
     }
+
 };
 
-const handleMove = async (ws, data, aWss, sessions) => {
+const handleMove = async (ws, data, aWss) => {
     const { roomId, index, symbol } = data;
     const session = sessions[roomId];
-
     const player = validateMove(session, ws, symbol);
     if (!player) return;
-
     const valid = applyMove(session, index, symbol);
 
     if (!valid) {
@@ -128,14 +144,12 @@ const handleMove = async (ws, data, aWss, sessions) => {
     }
 
     broadcastGameUpdate(aWss, roomId, session.game);
-
-    await handleGameResult(session);
+    await handleGameResult(session, roomId);
 };
 
-const handleRestart = (data, aWss, sessions) => {
+const handleRestart = (data, aWss) => {
     const { roomId } = data;
     const session = sessions[roomId];
-
     if (!session || session.players.length < 2) return;
 
     session.game = new Game();
@@ -159,17 +173,24 @@ const handleClose = (ws, aWss) => {
     if (session) {
         broadcast(aWss, roomId, {
             method: METHODS.OPPONENT_LEFT,
-            message: "Your opponent has left. You will be redirected to the Statistics page."
+            message: "Your opponent has left."
         });
 
         session.players = session.players.filter(p => p.socket !== ws);
-        session.started = false;
 
         if (session.players.length === 0) {
             delete sessions[roomId];
+        } else {
+            session.isFinished = true;
+            session.started = false;
+
+            setTimeout(() => {
+                if (sessions[roomId]) delete sessions[roomId];
+            }, 5000);
         }
     }
 };
+
 
 module.exports = {
     handleJoin,

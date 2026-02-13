@@ -142,3 +142,38 @@
         transition: 0.2s;
     }
 }
+
+@media (max-width: 768px) {
+    .rooms-container {
+        padding: 20px 10px;
+        gap: 20px;
+    }
+
+    .rooms-card {
+        width: 100%;
+        padding: 20px;
+
+        .create-btn {
+            width: 100%;
+        }
+
+        .room-item {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+
+    .users-stats {
+        width: 100%;
+        overflow-x: auto; 
+
+        table {
+            font-size: 14px;
+        }
+    }
+}

@@ -5,6 +5,7 @@ import { createSession } from "../api/createSession.api";
 import { getUserStats } from "../api/getUserStats.api";
 import "../styles/RoomsPage.scss";
 import { toast } from "react-toastify";
+import { GAME_STATUS } from "../constants.js";
 
 export default function RoomsPage() {
   const [rooms, setRooms] = useState([]);
@@ -55,13 +56,10 @@ export default function RoomsPage() {
     <div className="rooms-container">
       <div className="rooms-card">
         <h2>Hello, {userName}!</h2>
-
         <button className="create-btn" onClick={handleCreate}>
           + Create New Game
         </button>
-
         <div className="list-header">Available Rooms:</div>
-
         <div className="rooms-list">
           {loading && <p>Loading...</p>}
 
@@ -71,25 +69,28 @@ export default function RoomsPage() {
 
           {rooms.map((room) => (
             <div key={room.id} className="room-item">
-              <span>{room.status}</span>
+              <span>
+                {room.status === GAME_STATUS.FINISHED
+                  ? `Game in room №${room.id} is over`
+                  : `${room.status} in the room №${room.id}`}
+              </span>
 
               <button
                 disabled={
                   room.playersCount >= 2 ||
-                  room.status.toLowerCase() === "playing"
+                  room.status === GAME_STATUS.PLAYING ||
+                  room.status === GAME_STATUS.FINISHED
                 }
                 onClick={() => navigate(`/lobby/${room.id}`)}
               >
-                Join
+                {room.status === GAME_STATUS.FINISHED ? "Closed" : "Join"}
               </button>
             </div>
           ))}
         </div>
       </div>
-
       <div className="users-stats">
         <h3>User Statistics</h3>
-
         <table>
           <thead>
             <tr>
