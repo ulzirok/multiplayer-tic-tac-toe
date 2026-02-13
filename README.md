@@ -32,15 +32,15 @@ CREATE TABLE tictactoe_users (
 Бэкенд данного проекта задеплоен на бесплатном тарифе и может находиться в спящем режиме. При первом обращении к серверу после простоя запуск может занять до 30–60 секунд. Если приложение не отвечает сразу — пожалуйста, подождите немного и обновите страницу.
 
 ## Screenshots
-![Login Page](./screenshots/login.jpg)
+![Login Page](./Screenshots/login.jpg)
 
-![Room Page](./screenshots/room.jpg)
+![Room Page](./Screenshots/room.jpg)
 
-![Start](./screenshots/start.jpg)
+![Start](./Screenshots/start.jpg)
 
-![Board](./screenshots/board.jpg)
+![Board](./Screenshots/board.jpg)
 
-![Result](./screenshots/result.jpg)
+![Result](./Screenshots/result.jpg)
 
 
 
