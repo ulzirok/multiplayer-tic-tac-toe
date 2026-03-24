@@ -4,6 +4,8 @@ A real-time multiplayer Tic-Tac-Toe game built with WebSocket and PostgreSQL.
 
 **Deploy:** [https://cozy-douhua-c88ba3.netlify.app/](https://cozy-douhua-c88ba3.netlify.app/)
 
+**Demo Video:** [Open demo video](https://drive.google.com/file/d/1ozhJ9yPe5cIQ1fwUXYkBX9RpOBbzKWEZ/view?usp=sharing)
+
 ## Tech Stack
 - **Frontend:** React
 - **Backend:** Node.js, Express, WebSocket (ws), PostgreSQL
